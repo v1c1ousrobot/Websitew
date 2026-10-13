@@ -14,34 +14,27 @@ toggle.addEventListener('click', () => {
 });
 
 /* ============================================================
-   PARALLAX WALLPAPER + TILT
+   PARALLAX + TILT
    ============================================================ */
 const bgLayer = document.getElementById('bgLayer');
 const tilts   = document.querySelectorAll('.tilt');
-let tx = 0, ty = 0;        // target from mouse
-let bx = 0, by = 0;        // current (smoothed) for bg
+let tx = 0, ty = 0;
+let bx = 0, by = 0;
 
 document.addEventListener('mousemove', e => {
-  const w = innerWidth, h = innerHeight;
-  tx = (e.clientX / w - 0.5);   // -0.5 … 0.5
-  ty = (e.clientY / h - 0.5);
+  tx = (e.clientX / innerWidth  - 0.5);
+  ty = (e.clientY / innerHeight - 0.5);
 });
 
 function loopParallax() {
-  // Smooth follow
   bx += (tx - bx) * 0.08;
   by += (ty - by) * 0.08;
 
-  // Wallpaper drifts opposite to cursor
-  const bgX = -bx * 40;   // max ±20px
-  const bgY = -by * 40;
-  bgLayer.style.transform = `translate3d(${bgX}px, ${bgY}px, 0) scale(1.10)`;
+  bgLayer.style.transform = `translate3d(${-bx*40}px, ${-by*40}px, 0) scale(1.10)`;
 
-  // Glass cards tilt slightly
   tilts.forEach(el => {
-    const rotY =  bx * 6;   // ±3deg
-    const rotX = -by * 6;
-    el.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(0)`;
+    el.style.transform =
+      `perspective(900px) rotateX(${-by*6}deg) rotateY(${bx*6}deg) translateZ(0)`;
   });
 
   requestAnimationFrame(loopParallax);
@@ -84,7 +77,7 @@ document.querySelectorAll('a, button').forEach(el => {
 });
 
 /* ============================================================
-   AERO TRAIL
+   TRAIL
    ============================================================ */
 let last = 0;
 function makeTrail(x, y) {
@@ -94,15 +87,61 @@ function makeTrail(x, y) {
 
   const t = document.createElement('div');
   t.className = 'trail';
-
-  const hue = 185 + Math.random() * 80;   // cyan → violet
+  const hue = 185 + Math.random() * 80;
   const col = `hsl(${hue}, 100%, 74%)`;
   t.style.background = col;
   t.style.boxShadow  = `0 0 12px ${col}, 0 0 24px ${col}`;
-
   t.style.left = (x + (Math.random() - .5) * 12) + 'px';
   t.style.top  = (y + (Math.random() - .5) * 12) + 'px';
-
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 1000);
+}
+
+/* ============================================================
+   POPPABLE BUBBLES
+   ============================================================ */
+const bubbles = document.querySelectorAll('#bubbles span[data-bubble]');
+
+bubbles.forEach(b => {
+  b.addEventListener('click', e => {
+    if (b.classList.contains('pop')) return;
+
+    const rect = b.getBoundingClientRect();
+    const cx = rect.left + rect.width  / 2;
+    const cy = rect.top  + rect.height / 2;
+
+    spawnDroplets(cx, cy, 14);
+    b.classList.add('pop');
+
+    setTimeout(() => {
+      b.classList.remove('pop');
+      b.style.animation = 'none';
+      void b.offsetWidth;
+      b.style.animation = '';
+    }, 400);
+  });
+});
+
+function spawnDroplets(x, y, count) {
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'droplet';
+
+    const size  = 4 + Math.random() * 8;
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 40 + Math.random() * 70;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist - 20;
+
+    d.style.width  = size + 'px';
+    d.style.height = size + 'px';
+    d.style.left   = x + 'px';
+    d.style.top    = y + 'px';
+    d.style.setProperty('--dx', dx + 'px');
+    d.style.setProperty('--dy', dy + 'px');
+    d.style.animationDuration = (0.55 + Math.random() * 0.35) + 's';
+
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 900);
+  }
 }

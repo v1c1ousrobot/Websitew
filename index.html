@@ -8,6 +8,9 @@
 </head>
 <body>
 
+  <!-- Background music -->
+  <audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+
   <div class="bg-layer" id="bgLayer"></div>
   <div class="bg-tint"></div>
 
@@ -24,9 +27,16 @@
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
+  <!-- Theme toggle (top left) -->
   <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
     <span class="icon sun">☀</span>
     <span class="icon moon">☾</span>
+  </button>
+
+  <!-- Mute toggle (top right) -->
+  <button id="muteToggle" class="theme-toggle mute-toggle" aria-label="Mute music">
+    <span class="icon music-on">🔊</span>
+    <span class="icon music-off">🔇</span>
   </button>
 
   <main class="wrapper">

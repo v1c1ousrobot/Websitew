@@ -7,16 +7,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Floating bubbles (Frutiger Aero) -->
+
+  <!-- Parallax wallpaper layers -->
+  <div class="bg-layer"  id="bgLayer"></div>
+  <div class="bg-tint"></div>
+
+  <!-- Floating bubbles -->
   <div class="bubbles">
     <span></span><span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span>
   </div>
 
+  <!-- Aero light streaks -->
+  <div class="streaks">
+    <div></div><div></div><div></div>
+  </div>
+
+  <!-- Cursor -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- Theme switcher -->
+  <!-- Theme toggle -->
   <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
     <span class="icon sun">☀</span>
     <span class="icon moon">☾</span>
@@ -24,18 +36,19 @@
 
   <main class="wrapper">
 
-    <!-- Profile glass card -->
-    <section class="profile glass">
+    <!-- Profile -->
+    <section class="profile glass tilt">
       <div class="avatar-wrap">
         <img class="avatar" src="https://github.com/v1c1ousrobot.png" alt="Posh avatar">
         <div class="avatar-shine"></div>
+        <div class="avatar-ring-glow"></div>
       </div>
       <h1 class="name">Posh</h1>
-      <p class="handle">@poshplasma</p>
+      <p class="handle">@v1c1ousrobot</p>
     </section>
 
-    <!-- Bio glass card -->
-    <section class="bio glass">
+    <!-- Bio -->
+    <section class="bio glass tilt">
       <p>I make some cool stuff like games and launchers.<br>
       I love Anime, Manga, Friends, Family and Hanging out!</p>
     </section>
@@ -45,13 +58,13 @@
       <a href="https://github.com/v1c1ousrobot/LauncherDownload/releases/tag/v1.0.0"
          class="btn primary" target="_blank" rel="noopener">
         <span class="btn-shine"></span>
-        <span class="label">Posh Launcher</span>
+        <span class="label">⚡ Posh Launcher</span>
       </a>
 
       <a href="https://discord.gg/t78GMgmxJA"
          class="btn discord" target="_blank" rel="noopener">
         <span class="btn-shine"></span>
-        <span class="label">Community</span>
+        <span class="label">💬 Community</span>
       </a>
 
       <a href="https://github.com/v1c1ousrobot"

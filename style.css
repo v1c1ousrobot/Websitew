@@ -2,11 +2,10 @@
    THEMES
    ============================================================ */
 :root {
-  /* NIGHT — current dark aero, but with the wallpaper peeking through */
+  /* NIGHT */
   --wall-blur: 18px;
   --wall-bright: .35;
   --wall-sat: 1.1;
-  --wall-hue: 0deg;
 
   --tint-1: rgba(6, 12, 34, 0.72);
   --tint-2: rgba(12, 8, 40, 0.72);
@@ -23,16 +22,14 @@
   --accent: #7fd8ff;
   --accent-2: #a06bff;
   --accent-glow: rgba(127,216,255,.55);
-
   --btn-text: #ffffff;
 }
 
 [data-theme="light"] {
-  /* DAY — classic 2000s Frutiger Aero */
+  /* DAY — classic Aero */
   --wall-blur: 6px;
   --wall-bright: .95;
   --wall-sat: 1.35;
-  --wall-hue: 0deg;
 
   --tint-1: rgba(190, 235, 255, 0.15);
   --tint-2: rgba(180, 255, 220, 0.18);
@@ -49,7 +46,6 @@
   --accent: #2fb6ff;
   --accent-2: #6fd1a1;
   --accent-glow: rgba(47,182,255,.5);
-
   --btn-text: #ffffff;
 }
 
@@ -73,37 +69,34 @@ html, body {
 }
 
 /* ============================================================
-   WALLPAPER (parallax layer)
+   WALLPAPER
    ============================================================ */
 .bg-layer {
   position: fixed;
-  /* larger than viewport so it can drift without showing edges */
   inset: -60px;
   background-image: url("bg.jpg");
   background-size: cover;
   background-position: center;
-  filter: blur(var(--wall-blur)) brightness(var(--wall-bright)) saturate(var(--wall-sat)) hue-rotate(var(--wall-hue));
-  transform: translate3d(0, 0, 0) scale(1.08);
-  transition: filter .6s ease, background-image .4s;
+  filter: blur(var(--wall-blur)) brightness(var(--wall-bright)) saturate(var(--wall-sat));
+  transform: translate3d(0, 0, 0) scale(1.10);
+  transition: filter .6s ease;
   will-change: transform, filter;
   z-index: 0;
 }
 
-/* Color wash on top of the wallpaper */
 .bg-tint {
   position: fixed;
   inset: 0;
   background:
     radial-gradient(ellipse at 20% 10%, var(--tint-1), transparent 60%),
     radial-gradient(ellipse at 80% 90%, var(--tint-2), transparent 60%);
-  mix-blend-mode: normal;
   pointer-events: none;
   transition: background .6s ease;
   z-index: 1;
 }
 
 /* ============================================================
-   FLOATING BUBBLES
+   BUBBLES
    ============================================================ */
 .bubbles {
   position: fixed; inset: 0;
@@ -127,7 +120,11 @@ html, body {
               0 0 20px rgba(160,220,255,.35);
   animation: rise linear infinite;
   opacity: .85;
+  pointer-events: auto;
+  cursor: none;
+  transition: transform .12s ease, filter .12s ease;
 }
+.bubbles span:hover { transform: scale(1.12); filter: brightness(1.15); }
 
 .bubbles span:nth-child(1)  { left: 3%;  width: 40px;  height: 40px;  animation-duration: 22s; animation-delay: 0s; }
 .bubbles span:nth-child(2)  { left: 12%; width: 95px;  height: 95px;  animation-duration: 30s; animation-delay: 3s; }
@@ -149,8 +146,39 @@ html, body {
   100% { transform: translateY(-120vh) translateX(50px) scale(1.15); opacity: 0; }
 }
 
+/* Pop */
+.bubbles span.pop {
+  animation: popBurst .35s ease-out forwards !important;
+  pointer-events: none;
+}
+@keyframes popBurst {
+  0%   { transform: scale(1.15); opacity: 1; filter: brightness(1.6); }
+  60%  { transform: scale(1.45); opacity: .5; filter: brightness(2.2); }
+  100% { transform: scale(1.9);  opacity: 0; }
+}
+
+/* Droplets */
+.droplet {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  background: radial-gradient(circle at 30% 30%,
+              rgba(255,255,255,.95),
+              rgba(190,235,255,.65) 45%,
+              rgba(120,200,255,.25) 70%,
+              transparent 75%);
+  box-shadow: 0 0 8px rgba(200,240,255,.9),
+              0 0 16px rgba(127,216,255,.6);
+  animation: dropletFly .65s ease-out forwards;
+}
+@keyframes dropletFly {
+  0%   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; }
+}
+
 /* ============================================================
-   AERO LIGHT STREAKS
+   LIGHT STREAKS
    ============================================================ */
 .streaks {
   position: fixed; inset: 0;
@@ -176,14 +204,13 @@ html, body {
 .streaks div:nth-child(1) { left: 12%; animation-delay: 0s;   }
 .streaks div:nth-child(2) { left: 50%; animation-delay: 2.5s; }
 .streaks div:nth-child(3) { left: 84%; animation-delay: 4s;   }
-
 @keyframes sweep {
   0%,100% { transform: rotate(-14deg) translateY(-4%); opacity: .15; }
   50%     { transform: rotate(-14deg) translateY(6%);  opacity: .55; }
 }
 
 /* ============================================================
-   GLASS UTILITY
+   GLASS
    ============================================================ */
 .glass {
   background: var(--glass-bg);
@@ -197,7 +224,6 @@ html, body {
   position: relative;
   overflow: hidden;
 }
-
 .glass::before {
   content: "";
   position: absolute;
@@ -206,15 +232,11 @@ html, body {
   background: linear-gradient(90deg, transparent, var(--glass-highlight), transparent);
   opacity: .95;
 }
-
 .glass::after {
-  /* soft inner sheen */
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-              rgba(255,255,255,.10) 0%,
-              transparent 40%);
+  background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, transparent 40%);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -268,13 +290,12 @@ html, body {
   text-align: center;
 }
 
-/* Parallax tilt — JS will move it slightly */
 .tilt {
   transition: transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s ease;
   transform-style: preserve-3d;
 }
 
-/* ---------- Profile ---------- */
+/* Profile */
 .profile {
   padding: 34px 24px 28px;
   display: flex;
@@ -282,15 +303,13 @@ html, body {
   align-items: center;
   gap: 6px;
 }
-
 .avatar-wrap {
   position: relative;
   width: 128px; height: 128px;
   border-radius: 50%;
   padding: 4px;
   margin-bottom: 14px;
-  background: conic-gradient(from 180deg,
-              #7fd8ff, #a06bff, #6fd1a1, #7fd8ff);
+  background: conic-gradient(from 180deg, #7fd8ff, #a06bff, #6fd1a1, #7fd8ff);
   box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(160,107,255,.4);
   animation: spinBorder 9s linear infinite;
 }
@@ -303,19 +322,14 @@ html, body {
   display: block;
   background: #000;
 }
-
 .avatar-shine {
   position: absolute;
   inset: 4px;
   border-radius: 50%;
-  background: linear-gradient(150deg,
-              rgba(255,255,255,.7) 0%,
-              rgba(255,255,255,.1) 38%,
-              transparent 60%);
+  background: linear-gradient(150deg, rgba(255,255,255,.7) 0%, rgba(255,255,255,.1) 38%, transparent 60%);
   pointer-events: none;
   mix-blend-mode: screen;
 }
-
 .avatar-ring-glow {
   position: absolute;
   inset: -8px;
@@ -329,7 +343,6 @@ html, body {
   z-index: -1;
   animation: spinBorder 9s linear infinite reverse;
 }
-
 .name {
   font-size: 46px;
   font-weight: 800;
@@ -345,28 +358,20 @@ html, body {
   -webkit-background-clip: text;
   background-clip: text;
 }
-
 .handle {
   font-size: 13px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--text-dim);
 }
-
-/* ---------- Bio ---------- */
 .bio {
   padding: 24px 28px;
   font-size: 16px;
   line-height: 1.7;
 }
 
-/* ---------- Buttons ---------- */
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
+/* Buttons */
+.buttons { display: flex; flex-direction: column; gap: 14px; }
 .btn {
   position: relative;
   display: block;
@@ -386,27 +391,17 @@ html, body {
     inset 0 -2px 10px rgba(0,0,0,.28),
     0 6px 22px rgba(0,0,0,.4);
 }
-
-.btn .label {
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 1px 2px rgba(0,0,0,.4);
-}
-
+.btn .label { position: relative; z-index: 2; text-shadow: 0 1px 2px rgba(0,0,0,.4); }
 .btn-shine {
   position: absolute;
   top: 0; left: -60%;
   width: 40%; height: 100%;
-  background: linear-gradient(115deg,
-              transparent,
-              rgba(255,255,255,.85),
-              transparent);
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,.85), transparent);
   transform: skewX(-20deg);
   z-index: 1;
   transition: left .8s ease;
 }
 .btn:hover .btn-shine { left: 130%; }
-
 .btn:hover { transform: translateY(-3px) scale(1.02); }
 .btn:active { transform: translateY(-1px) scale(1); }
 
@@ -422,7 +417,6 @@ html, body {
     0 0 45px rgba(87,200,255,.95),
     0 12px 28px rgba(0,0,0,.45);
 }
-
 .btn.discord {
   background:
     linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 45%),
@@ -435,7 +429,6 @@ html, body {
     0 0 45px rgba(88,101,242,1),
     0 12px 28px rgba(0,0,0,.45);
 }
-
 .btn.ghost {
   color: var(--text);
   background: var(--glass-bg-2);
@@ -465,19 +458,14 @@ html, body {
   z-index: 9999;
   transition: background .35s, box-shadow .35s, border-color .35s;
 }
-
 .cursor-dot {
   width: 13px; height: 13px;
-  background: radial-gradient(circle at 32% 28%,
-              #ffffff 0%,
-              #d7f1ff 40%,
-              #8ec9ff 100%);
+  background: radial-gradient(circle at 32% 28%, #ffffff 0%, #d7f1ff 40%, #8ec9ff 100%);
   box-shadow:
     0 0 12px #ffffff,
     0 0 26px rgba(127,216,255,1),
     0 0 46px rgba(160,107,255,.6);
 }
-
 .cursor-ring {
   width: 44px; height: 44px;
   border: 2px solid rgba(200,235,255,.85);
@@ -486,16 +474,10 @@ html, body {
     inset 0 0 20px rgba(160,107,255,.4);
   transition: width .18s, height .18s, border-color .35s, box-shadow .35s;
 }
-
 [data-theme="light"] .cursor-dot {
-  background: radial-gradient(circle at 32% 28%,
-              #ffffff 0%,
-              #cfeeff 40%,
-              #2fb6ff 100%);
+  background: radial-gradient(circle at 32% 28%, #ffffff 0%, #cfeeff 40%, #2fb6ff 100%);
 }
-[data-theme="light"] .cursor-ring {
-  border-color: rgba(47,182,255,.9);
-}
+[data-theme="light"] .cursor-ring { border-color: rgba(47,182,255,.9); }
 
 .trail {
   position: fixed;
@@ -507,7 +489,6 @@ html, body {
   animation: fadeTrail 1s ease-out forwards;
   mix-blend-mode: screen;
 }
-
 @keyframes fadeTrail {
   0%   { opacity: .95; transform: translate(-50%,-50%) scale(1); }
   100% { opacity: 0;   transform: translate(-50%,-50%) scale(.15); }

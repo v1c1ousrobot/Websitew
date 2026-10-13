@@ -1,11 +1,13 @@
 /* ============================================================
-   THEME
+   THEME — LIGHT IS DEFAULT
    ============================================================ */
 const root   = document.documentElement;
 const toggle = document.getElementById('themeToggle');
 
+// Only override default if the user has previously chosen one
 const saved = localStorage.getItem('theme');
 if (saved) root.setAttribute('data-theme', saved);
+else root.setAttribute('data-theme', 'light');   // default = light
 
 toggle.addEventListener('click', () => {
   const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -18,8 +20,7 @@ toggle.addEventListener('click', () => {
    ============================================================ */
 const bgLayer = document.getElementById('bgLayer');
 const tilts   = document.querySelectorAll('.tilt');
-let tx = 0, ty = 0;
-let bx = 0, by = 0;
+let tx = 0, ty = 0, bx = 0, by = 0;
 
 document.addEventListener('mousemove', e => {
   tx = (e.clientX / innerWidth  - 0.5);
@@ -100,36 +101,70 @@ function makeTrail(x, y) {
 /* ============================================================
    POPPABLE BUBBLES
    ============================================================ */
-const bubbles = document.querySelectorAll('#bubbles span[data-bubble]');
+const bubbleEls = document.querySelectorAll('#bubbles span[data-bubble]');
 
-bubbles.forEach(b => {
+/* --- pop sound --- */
+let audioCtx = null;
+function playPop() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const t = audioCtx.currentTime;
+
+    // short "pop" — sine sweep + tiny noise burst
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(900 + Math.random() * 400, t);
+    osc.frequency.exponentialRampToValueAtTime(160, t + 0.12);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.25, t + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.18);
+  } catch (e) { /* silent fail */ }
+}
+
+/* --- click = pop --- */
+bubbleEls.forEach(b => {
+  // hitbox grows on touch too (whole visible bubble clickable)
   b.addEventListener('click', e => {
-    if (b.classList.contains('pop')) return;
-
-    const rect = b.getBoundingClientRect();
-    const cx = rect.left + rect.width  / 2;
-    const cy = rect.top  + rect.height / 2;
-
-    spawnDroplets(cx, cy, 14);
-    b.classList.add('pop');
-
-    setTimeout(() => {
-      b.classList.remove('pop');
-      b.style.animation = 'none';
-      void b.offsetWidth;
-      b.style.animation = '';
-    }, 400);
+    e.stopPropagation();
+    popBubble(b);
   });
 });
+
+function popBubble(b) {
+  if (b.classList.contains('pop')) return;
+
+  const rect = b.getBoundingClientRect();
+  const cx = rect.left + rect.width  / 2;
+  const cy = rect.top  + rect.height / 2;
+
+  spawnDroplets(cx, cy, 16);
+  playPop();
+
+  b.classList.add('pop');
+
+  // Respawn after pop finishes
+  setTimeout(() => {
+    b.classList.remove('pop');
+    b.style.animation = 'none';
+    void b.offsetWidth;
+    b.style.animation = '';
+  }, 450);
+}
 
 function spawnDroplets(x, y, count) {
   for (let i = 0; i < count; i++) {
     const d = document.createElement('div');
     d.className = 'droplet';
 
-    const size  = 4 + Math.random() * 8;
+    const size  = 4 + Math.random() * 9;
     const angle = Math.random() * Math.PI * 2;
-    const dist  = 40 + Math.random() * 70;
+    const dist  = 40 + Math.random() * 80;
     const dx = Math.cos(angle) * dist;
     const dy = Math.sin(angle) * dist - 20;
 

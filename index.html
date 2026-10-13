@@ -7,10 +7,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Floating bubbles (Frutiger Aero) -->
+  <div class="bubbles">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- Theme switcher (top left) -->
+  <!-- Theme switcher -->
   <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
     <span class="icon sun">☀</span>
     <span class="icon moon">☾</span>
@@ -18,28 +24,40 @@
 
   <main class="wrapper">
 
-    <!-- Profile -->
-    <section class="profile">
-      <img class="avatar" src="https://github.com/v1c1ousrobot.png" alt="Posh avatar">
+    <!-- Profile glass card -->
+    <section class="profile glass">
+      <div class="avatar-wrap">
+        <img class="avatar" src="https://github.com/v1c1ousrobot.png" alt="Posh avatar">
+        <div class="avatar-shine"></div>
+      </div>
       <h1 class="name">Posh</h1>
       <p class="handle">@poshplasma</p>
     </section>
 
-    <!-- Bio card -->
-    <section class="bio">
-      <p>I make some cool stuff like games and launchers. I love Anime, Manga, Friends, Family and Hanging out!</p>
+    <!-- Bio glass card -->
+    <section class="bio glass">
+      <p>I make some cool stuff like games and launchers.<br>
+      I love Anime, Manga, Friends, Family and Hanging out!</p>
     </section>
 
     <!-- Buttons -->
     <section class="buttons">
-      <a href="https://github.com/v1c1ousrobot/LauncherDownload/releases/tag/v1.0.0" class="btn primary" target="_blank" rel="noopener">
-        Posh Launcher
+      <a href="https://github.com/v1c1ousrobot/LauncherDownload/releases/tag/v1.0.0"
+         class="btn primary" target="_blank" rel="noopener">
+        <span class="btn-shine"></span>
+        <span class="label">Posh Launcher</span>
       </a>
-      <a href="https://discord.gg/t78GMgmxJA" class="btn discord" target="_blank" rel="noopener">
-         Community
+
+      <a href="https://discord.gg/t78GMgmxJA"
+         class="btn discord" target="_blank" rel="noopener">
+        <span class="btn-shine"></span>
+        <span class="label">Community</span>
       </a>
-      <a href="https://github.com/v1c1ousrobot" class="btn ghost" target="_blank" rel="noopener">
-        ★ GitHub Profile
+
+      <a href="https://github.com/v1c1ousrobot"
+         class="btn ghost" target="_blank" rel="noopener">
+        <span class="btn-shine"></span>
+        <span class="label">★ GitHub Profile</span>
       </a>
     </section>
 

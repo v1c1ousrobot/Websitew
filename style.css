@@ -1,0 +1,102 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  height: 100vh;
+  background: #05060a;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(0,225,255,.2), transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(180,0,255,.2), transparent 50%);
+  animation: pulse 6s infinite alternate;
+}
+
+@keyframes pulse { to { transform: scale(1.2); } }
+
+.center {
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+h1 {
+  font-size: 60px;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #00e1ff, #b400ff, #00e1ff);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 4s linear infinite;
+}
+
+@keyframes shine { to { background-position: 200%; } }
+
+p {
+  opacity: .7;
+  letter-spacing: 3px;
+  margin: 15px 0 40px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 15px 32px;
+  margin: 8px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  background: linear-gradient(135deg, #00e1ff, #b400ff);
+  color: black;
+  box-shadow: 0 0 30px rgba(0,225,255,.5);
+  transition: transform .2s;
+}
+
+.btn:hover { transform: scale(1.1); }
+
+.ghost {
+  background: rgba(255,255,255,.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+.cursor-dot, .cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: #00e1ff;
+  box-shadow: 0 0 15px #00e1ff;
+}
+
+.cursor-ring {
+  width: 40px; height: 40px;
+  border: 2px solid #b400ff;
+  box-shadow: 0 0 15px #b400ff;
+}
+
+.trail {
+  position: fixed;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: fade .9s forwards;
+}
+
+@keyframes fade { to { opacity: 0; transform: translate(-50%,-50%) scale(0); } }

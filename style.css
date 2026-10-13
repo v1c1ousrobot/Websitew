@@ -1,32 +1,8 @@
 /* ============================================================
-   THEMES
+   THEMES — LIGHT IS DEFAULT
    ============================================================ */
 :root {
-  /* NIGHT */
-  --wall-blur: 18px;
-  --wall-bright: .35;
-  --wall-sat: 1.1;
-
-  --tint-1: rgba(6, 12, 34, 0.72);
-  --tint-2: rgba(12, 8, 40, 0.72);
-
-  --text: #eaf3ff;
-  --text-dim: #9bb3d8;
-
-  --glass-bg: rgba(255,255,255,.06);
-  --glass-bg-2: rgba(255,255,255,.10);
-  --glass-border: rgba(255,255,255,.20);
-  --glass-highlight: rgba(255,255,255,.5);
-  --glass-shadow: 0 10px 40px rgba(0,0,0,.55);
-
-  --accent: #7fd8ff;
-  --accent-2: #a06bff;
-  --accent-glow: rgba(127,216,255,.55);
-  --btn-text: #ffffff;
-}
-
-[data-theme="light"] {
-  /* DAY — classic Aero */
+  /* LIGHT — classic Aero (default) */
   --wall-blur: 6px;
   --wall-bright: .95;
   --wall-sat: 1.35;
@@ -46,6 +22,30 @@
   --accent: #2fb6ff;
   --accent-2: #6fd1a1;
   --accent-glow: rgba(47,182,255,.5);
+  --btn-text: #ffffff;
+}
+
+[data-theme="dark"] {
+  /* DARK — night Aero */
+  --wall-blur: 18px;
+  --wall-bright: .35;
+  --wall-sat: 1.1;
+
+  --tint-1: rgba(6, 12, 34, 0.72);
+  --tint-2: rgba(12, 8, 40, 0.72);
+
+  --text: #eaf3ff;
+  --text-dim: #9bb3d8;
+
+  --glass-bg: rgba(255,255,255,.06);
+  --glass-bg-2: rgba(255,255,255,.10);
+  --glass-border: rgba(255,255,255,.20);
+  --glass-highlight: rgba(255,255,255,.5);
+  --glass-shadow: 0 10px 40px rgba(0,0,0,.55);
+
+  --accent: #7fd8ff;
+  --accent-2: #a06bff;
+  --accent-glow: rgba(127,216,255,.55);
   --btn-text: #ffffff;
 }
 
@@ -83,7 +83,6 @@ html, body {
   will-change: transform, filter;
   z-index: 0;
 }
-
 .bg-tint {
   position: fixed;
   inset: 0;
@@ -96,13 +95,13 @@ html, body {
 }
 
 /* ============================================================
-   BUBBLES
+   BUBBLES — BIG CLICKABLE HITBOX
    ============================================================ */
 .bubbles {
   position: fixed; inset: 0;
   overflow: hidden;
   pointer-events: none;
-  z-index: 2;
+  z-index: 8;
 }
 
 .bubbles span {
@@ -114,30 +113,42 @@ html, body {
               rgba(255,255,255,.25) 40%,
               rgba(255,255,255,.05) 70%,
               transparent 75%);
-  border: 1px solid rgba(255,255,255,.4);
+  border: 1px solid rgba(255,255,255,.55);
   box-shadow: inset -8px -8px 22px rgba(255,255,255,.25),
               inset 8px 8px 25px rgba(120,200,255,.18),
               0 0 20px rgba(160,220,255,.35);
   animation: rise linear infinite;
-  opacity: .85;
+  opacity: .9;
   pointer-events: auto;
   cursor: none;
   transition: transform .12s ease, filter .12s ease;
 }
-.bubbles span:hover { transform: scale(1.12); filter: brightness(1.15); }
 
-.bubbles span:nth-child(1)  { left: 3%;  width: 40px;  height: 40px;  animation-duration: 22s; animation-delay: 0s; }
+/* Invisible 25px halo so it's easy to hit */
+.bubbles span::after {
+  content: "";
+  position: absolute;
+  inset: -25px;
+  border-radius: 50%;
+}
+
+.bubbles span:hover {
+  transform: scale(1.15);
+  filter: brightness(1.2) saturate(1.2);
+}
+
+.bubbles span:nth-child(1)  { left: 3%;  width: 55px;  height: 55px;  animation-duration: 22s; animation-delay: 0s; }
 .bubbles span:nth-child(2)  { left: 12%; width: 95px;  height: 95px;  animation-duration: 30s; animation-delay: 3s; }
-.bubbles span:nth-child(3)  { left: 24%; width: 55px;  height: 55px;  animation-duration: 26s; animation-delay: 6s; }
-.bubbles span:nth-child(4)  { left: 38%; width: 30px;  height: 30px;  animation-duration: 20s; animation-delay: 1s; }
-.bubbles span:nth-child(5)  { left: 50%; width: 70px;  height: 70px;  animation-duration: 34s; animation-delay: 8s; }
-.bubbles span:nth-child(6)  { left: 62%; width: 45px;  height: 45px;  animation-duration: 24s; animation-delay: 4s; }
+.bubbles span:nth-child(3)  { left: 24%; width: 70px;  height: 70px;  animation-duration: 26s; animation-delay: 6s; }
+.bubbles span:nth-child(4)  { left: 38%; width: 50px;  height: 50px;  animation-duration: 20s; animation-delay: 1s; }
+.bubbles span:nth-child(5)  { left: 50%; width: 80px;  height: 80px;  animation-duration: 34s; animation-delay: 8s; }
+.bubbles span:nth-child(6)  { left: 62%; width: 60px;  height: 60px;  animation-duration: 24s; animation-delay: 4s; }
 .bubbles span:nth-child(7)  { left: 74%; width: 105px; height: 105px; animation-duration: 40s; animation-delay: 10s; }
-.bubbles span:nth-child(8)  { left: 85%; width: 35px;  height: 35px;  animation-duration: 22s; animation-delay: 2s; }
-.bubbles span:nth-child(9)  { left: 33%; width: 80px;  height: 80px;  animation-duration: 36s; animation-delay: 12s; }
-.bubbles span:nth-child(10) { left: 58%; width: 25px;  height: 25px;  animation-duration: 18s; animation-delay: 5s; }
-.bubbles span:nth-child(11) { left: 46%; width: 60px;  height: 60px;  animation-duration: 28s; animation-delay: 7s; }
-.bubbles span:nth-child(12) { left: 92%; width: 50px;  height: 50px;  animation-duration: 25s; animation-delay: 9s; }
+.bubbles span:nth-child(8)  { left: 85%; width: 55px;  height: 55px;  animation-duration: 22s; animation-delay: 2s; }
+.bubbles span:nth-child(9)  { left: 33%; width: 85px;  height: 85px;  animation-duration: 36s; animation-delay: 12s; }
+.bubbles span:nth-child(10) { left: 58%; width: 45px;  height: 45px;  animation-duration: 18s; animation-delay: 5s; }
+.bubbles span:nth-child(11) { left: 46%; width: 75px;  height: 75px;  animation-duration: 28s; animation-delay: 7s; }
+.bubbles span:nth-child(12) { left: 92%; width: 65px;  height: 65px;  animation-duration: 25s; animation-delay: 9s; }
 
 @keyframes rise {
   0%   { transform: translateY(0)      translateX(0)   scale(1);   opacity: 0; }
@@ -146,15 +157,14 @@ html, body {
   100% { transform: translateY(-120vh) translateX(50px) scale(1.15); opacity: 0; }
 }
 
-/* Pop */
 .bubbles span.pop {
   animation: popBurst .35s ease-out forwards !important;
   pointer-events: none;
 }
 @keyframes popBurst {
-  0%   { transform: scale(1.15); opacity: 1; filter: brightness(1.6); }
-  60%  { transform: scale(1.45); opacity: .5; filter: brightness(2.2); }
-  100% { transform: scale(1.9);  opacity: 0; }
+  0%   { transform: scale(1.2); opacity: 1; filter: brightness(1.8); }
+  60%  { transform: scale(1.6); opacity: .5; filter: brightness(2.4); }
+  100% { transform: scale(2.1); opacity: 0; }
 }
 
 /* Droplets */
@@ -271,10 +281,10 @@ html, body {
   position: absolute;
   transition: opacity .3s ease, transform .45s ease;
 }
-.theme-toggle .sun  { opacity: 0; transform: rotate(-90deg) scale(.4); }
-.theme-toggle .moon { opacity: 1; transform: rotate(0)      scale(1); }
-[data-theme="light"] .theme-toggle .sun  { opacity: 1; transform: rotate(0)     scale(1); }
-[data-theme="light"] .theme-toggle .moon { opacity: 0; transform: rotate(90deg) scale(.4); }
+.theme-toggle .sun  { opacity: 1; transform: rotate(0)      scale(1); }
+.theme-toggle .moon { opacity: 0; transform: rotate(90deg) scale(.4); }
+[data-theme="dark"] .theme-toggle .sun  { opacity: 0; transform: rotate(-90deg) scale(.4); }
+[data-theme="dark"] .theme-toggle .moon { opacity: 1; transform: rotate(0)      scale(1); }
 
 /* ============================================================
    LAYOUT
@@ -289,13 +299,11 @@ html, body {
   gap: 22px;
   text-align: center;
 }
-
 .tilt {
   transition: transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s ease;
   transform-style: preserve-3d;
 }
 
-/* Profile */
 .profile {
   padding: 34px 24px 28px;
   display: flex;
@@ -347,14 +355,14 @@ html, body {
   font-size: 46px;
   font-weight: 800;
   letter-spacing: 1px;
-  background: linear-gradient(180deg, #ffffff 0%, var(--text) 55%, var(--text-dim) 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #0c2540 60%, #4d6a8a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   text-shadow: 0 2px 14px var(--accent-glow);
 }
-[data-theme="light"] .name {
-  background: linear-gradient(180deg, #ffffff 0%, #0c2540 60%, #4d6a8a 100%);
+[data-theme="dark"] .name {
+  background: linear-gradient(180deg, #ffffff 0%, #eaf3ff 55%, #9bb3d8 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -370,7 +378,6 @@ html, body {
   line-height: 1.7;
 }
 
-/* Buttons */
 .buttons { display: flex; flex-direction: column; gap: 14px; }
 .btn {
   position: relative;
@@ -460,24 +467,33 @@ html, body {
 }
 .cursor-dot {
   width: 13px; height: 13px;
+  background: radial-gradient(circle at 32% 28%, #ffffff 0%, #cfeeff 40%, #2fb6ff 100%);
+  box-shadow:
+    0 0 12px #ffffff,
+    0 0 26px rgba(47,182,255,.9),
+    0 0 46px rgba(111,209,161,.5);
+}
+.cursor-ring {
+  width: 44px; height: 44px;
+  border: 2px solid rgba(47,182,255,.85);
+  box-shadow:
+    0 0 20px rgba(47,182,255,.7),
+    inset 0 0 20px rgba(111,209,161,.4);
+  transition: width .18s, height .18s, border-color .35s, box-shadow .35s;
+}
+[data-theme="dark"] .cursor-dot {
   background: radial-gradient(circle at 32% 28%, #ffffff 0%, #d7f1ff 40%, #8ec9ff 100%);
   box-shadow:
     0 0 12px #ffffff,
     0 0 26px rgba(127,216,255,1),
     0 0 46px rgba(160,107,255,.6);
 }
-.cursor-ring {
-  width: 44px; height: 44px;
-  border: 2px solid rgba(200,235,255,.85);
+[data-theme="dark"] .cursor-ring {
+  border-color: rgba(200,235,255,.85);
   box-shadow:
     0 0 20px rgba(127,216,255,.75),
     inset 0 0 20px rgba(160,107,255,.4);
-  transition: width .18s, height .18s, border-color .35s, box-shadow .35s;
 }
-[data-theme="light"] .cursor-dot {
-  background: radial-gradient(circle at 32% 28%, #ffffff 0%, #cfeeff 40%, #2fb6ff 100%);
-}
-[data-theme="light"] .cursor-ring { border-color: rgba(47,182,255,.9); }
 
 .trail {
   position: fixed;
@@ -498,5 +514,5 @@ html, body {
 @media (pointer: coarse) {
   .cursor-dot, .cursor-ring { display: none; }
   body, .theme-toggle { cursor: auto; }
-  .bubbles { opacity: .5; }
+  .bubbles { opacity: .6; }
 }

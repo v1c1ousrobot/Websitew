@@ -1,8 +1,9 @@
-/* ---------- Theme switcher ---------- */
-const root = document.documentElement;
+/* ============================================================
+   THEME SWITCHER
+   ============================================================ */
+const root   = document.documentElement;
 const toggle = document.getElementById('themeToggle');
 
-// Load saved theme
 const saved = localStorage.getItem('theme');
 if (saved) root.setAttribute('data-theme', saved);
 
@@ -12,23 +13,23 @@ toggle.addEventListener('click', () => {
   localStorage.setItem('theme', next);
 });
 
-/* ---------- Cursor ---------- */
+/* ============================================================
+   CURSOR
+   ============================================================ */
 const dot  = document.querySelector('.cursor-dot');
 const ring = document.querySelector('.cursor-ring');
 
-let mx = window.innerWidth  / 2;
-let my = window.innerHeight / 2;
+let mx = innerWidth / 2, my = innerHeight / 2;
 let rx = mx, ry = my;
 
 document.addEventListener('mousemove', e => {
-  mx = e.clientX;
-  my = e.clientY;
+  mx = e.clientX; my = e.clientY;
   dot.style.left = mx + 'px';
   dot.style.top  = my + 'px';
   makeTrail(mx, my);
 });
 
-(function animateRing() {
+(function animateRing(){
   rx += (mx - rx) * 0.15;
   ry += (my - ry) * 0.15;
   ring.style.left = rx + 'px';
@@ -38,34 +39,36 @@ document.addEventListener('mousemove', e => {
 
 document.querySelectorAll('a, button').forEach(el => {
   el.addEventListener('mouseenter', () => {
-    ring.style.width  = '64px';
-    ring.style.height = '64px';
+    ring.style.width  = '68px';
+    ring.style.height = '68px';
   });
   el.addEventListener('mouseleave', () => {
-    ring.style.width  = '38px';
-    ring.style.height = '38px';
+    ring.style.width  = '42px';
+    ring.style.height = '42px';
   });
 });
 
-/* ---------- White trail ---------- */
+/* ============================================================
+   AERO TRAIL (aqua → purple gradient particles)
+   ============================================================ */
 let last = 0;
 function makeTrail(x, y) {
   const now = performance.now();
-  if (now - last < 18) return;
+  if (now - last < 16) return;
   last = now;
 
   const t = document.createElement('div');
   t.className = 'trail';
 
-  // Color depends on theme: white in dark, dark in light
-  const light = document.documentElement.getAttribute('data-theme') === 'light';
-  const col   = light ? '#0d1117' : '#ffffff';
-  t.style.background = col;
-  t.style.boxShadow  = `0 0 10px ${col}, 0 0 18px ${col}`;
+  const hue = 190 + Math.random() * 70;       // 190 = cyan, 260 = purple
+  const col = `hsl(${hue}, 100%, 72%)`;
 
-  t.style.left = (x + (Math.random() - .5) * 10) + 'px';
-  t.style.top  = (y + (Math.random() - .5) * 10) + 'px';
+  t.style.background = col;
+  t.style.boxShadow  = `0 0 12px ${col}, 0 0 22px ${col}`;
+
+  t.style.left = (x + (Math.random() - .5) * 12) + 'px';
+  t.style.top  = (y + (Math.random() - .5) * 12) + 'px';
 
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 900);
+  setTimeout(() => t.remove(), 950);
 }

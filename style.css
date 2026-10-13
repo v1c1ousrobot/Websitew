@@ -1,8 +1,8 @@
 /* ============================================================
-   THEMES — LIGHT IS DEFAULT
+   THEMES
    ============================================================ */
 :root {
-  /* LIGHT — classic Aero (default) */
+  /* LIGHT (default) */
   --wall-blur: 6px;
   --wall-bright: .95;
   --wall-sat: 1.35;
@@ -20,13 +20,11 @@
   --glass-shadow: 0 12px 34px rgba(20,80,140,.22);
 
   --accent: #2fb6ff;
-  --accent-2: #6fd1a1;
   --accent-glow: rgba(47,182,255,.5);
   --btn-text: #ffffff;
 }
 
 [data-theme="dark"] {
-  /* DARK — night Aero */
   --wall-blur: 18px;
   --wall-bright: .35;
   --wall-sat: 1.1;
@@ -44,7 +42,6 @@
   --glass-shadow: 0 10px 40px rgba(0,0,0,.55);
 
   --accent: #7fd8ff;
-  --accent-2: #a06bff;
   --accent-glow: rgba(127,216,255,.55);
   --btn-text: #ffffff;
 }
@@ -55,6 +52,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
+  width: 100%;
+  min-height: 100%;
   height: 100%;
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   color: var(--text);
@@ -84,8 +83,7 @@ html, body {
   z-index: 0;
 }
 .bg-tint {
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background:
     radial-gradient(ellipse at 20% 10%, var(--tint-1), transparent 60%),
     radial-gradient(ellipse at 80% 90%, var(--tint-2), transparent 60%);
@@ -95,7 +93,7 @@ html, body {
 }
 
 /* ============================================================
-   BUBBLES — BIG CLICKABLE HITBOX
+   BUBBLES
    ============================================================ */
 .bubbles {
   position: fixed; inset: 0;
@@ -103,7 +101,6 @@ html, body {
   pointer-events: none;
   z-index: 8;
 }
-
 .bubbles span {
   position: absolute;
   bottom: -150px;
@@ -123,15 +120,12 @@ html, body {
   cursor: none;
   transition: transform .12s ease, filter .12s ease;
 }
-
-/* Invisible 25px halo so it's easy to hit */
 .bubbles span::after {
   content: "";
   position: absolute;
   inset: -25px;
   border-radius: 50%;
 }
-
 .bubbles span:hover {
   transform: scale(1.15);
   filter: brightness(1.2) saturate(1.2);
@@ -167,7 +161,6 @@ html, body {
   100% { transform: scale(2.1); opacity: 0; }
 }
 
-/* Droplets */
 .droplet {
   position: fixed;
   border-radius: 50%;
@@ -252,7 +245,7 @@ html, body {
 }
 
 /* ============================================================
-   THEME TOGGLE
+   TOP BUTTONS
    ============================================================ */
 .theme-toggle {
   position: fixed;
@@ -281,10 +274,77 @@ html, body {
   position: absolute;
   transition: opacity .3s ease, transform .45s ease;
 }
-.theme-toggle .sun  { opacity: 1; transform: rotate(0)      scale(1); }
+.theme-toggle .sun  { opacity: 1; transform: rotate(0) scale(1); }
 .theme-toggle .moon { opacity: 0; transform: rotate(90deg) scale(.4); }
 [data-theme="dark"] .theme-toggle .sun  { opacity: 0; transform: rotate(-90deg) scale(.4); }
-[data-theme="dark"] .theme-toggle .moon { opacity: 1; transform: rotate(0)      scale(1); }
+[data-theme="dark"] .theme-toggle .moon { opacity: 1; transform: rotate(0) scale(1); }
+
+/* ============================================================
+   SOUND MENU
+   ============================================================ */
+.sound-menu {
+  position: fixed;
+  top: 22px;
+  right: 22px;
+  z-index: 30;
+}
+.sound-toggle {
+  position: relative;
+  top: auto; left: auto;
+}
+.sound-toggle .music-on  { opacity: 1; transform: scale(1); }
+.sound-toggle .music-off { opacity: 0; transform: scale(.4); }
+.sound-toggle.muted .music-on  { opacity: 0; transform: scale(.4); }
+.sound-toggle.muted .music-off { opacity: 1; transform: scale(1); }
+
+.sound-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 170px;
+  background: var(--glass-bg-2);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px) scale(.96);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.sound-dropdown.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.sound-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  cursor: none;
+  text-align: left;
+  transition: background .15s ease, color .15s ease;
+}
+.sound-dropdown button:hover { background: var(--glass-bg); }
+.sound-dropdown button.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 14px var(--accent-glow);
+}
 
 /* ============================================================
    LAYOUT
@@ -510,20 +570,8 @@ html, body {
   100% { opacity: 0;   transform: translate(-50%,-50%) scale(.15); }
 }
 
-/* Mobile */
 @media (pointer: coarse) {
   .cursor-dot, .cursor-ring { display: none; }
-  body, .theme-toggle { cursor: auto; }
+  body, .theme-toggle, .sound-dropdown button { cursor: auto; }
   .bubbles { opacity: .6; }
 }
-/* ============================================================
-   MUTE BUTTON (top right)
-   ============================================================ */
-.mute-toggle {
-  left: auto;
-  right: 22px;
-}
-.mute-toggle .music-on  { opacity: 1; transform: scale(1); }
-.mute-toggle .music-off { opacity: 0; transform: scale(.4); }
-.mute-toggle.muted .music-on  { opacity: 0; transform: scale(.4); }
-.mute-toggle.muted .music-off { opacity: 1; transform: scale(1); }

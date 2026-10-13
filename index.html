@@ -8,13 +8,11 @@
 </head>
 <body>
 
-  <!-- Background music -->
   <audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
 
   <div class="bg-layer" id="bgLayer"></div>
   <div class="bg-tint"></div>
 
-  <!-- Poppable bubbles -->
   <div class="bubbles" id="bubbles">
     <span data-bubble></span><span data-bubble></span><span data-bubble></span>
     <span data-bubble></span><span data-bubble></span><span data-bubble></span>
@@ -33,11 +31,18 @@
     <span class="icon moon">☾</span>
   </button>
 
-  <!-- Mute toggle (top right) -->
-  <button id="muteToggle" class="theme-toggle mute-toggle" aria-label="Mute music">
-    <span class="icon music-on">🔊</span>
-    <span class="icon music-off">🔇</span>
-  </button>
+  <!-- Sound menu (top right) -->
+  <div class="sound-menu">
+    <button id="soundBtn" class="theme-toggle sound-toggle" aria-label="Sound">
+      <span class="icon music-on">🔊</span>
+      <span class="icon music-off">🔇</span>
+    </button>
+    <div class="sound-dropdown" id="soundDropdown">
+      <button data-volume="0">🔇 Silent</button>
+      <button data-volume="0.5" class="active">🔉 Medium</button>
+      <button data-volume="1">🔊 Max</button>
+    </div>
+  </div>
 
   <main class="wrapper">
 
@@ -62,13 +67,11 @@
         <span class="btn-shine"></span>
         <span class="label">⚡ Posh Launcher</span>
       </a>
-
       <a href="https://discord.gg/t78GMgmxJA"
          class="btn discord" target="_blank" rel="noopener">
         <span class="btn-shine"></span>
         <span class="label">💬 Community</span>
       </a>
-
       <a href="https://github.com/v1c1ousrobot"
          class="btn ghost" target="_blank" rel="noopener">
         <span class="btn-shine"></span>

@@ -1,5 +1,5 @@
 /* ============================================================
-   THEME — LIGHT IS DEFAULT
+   THEME
    ============================================================ */
 try {
   const root   = document.documentElement;
@@ -17,16 +17,32 @@ try {
 } catch (e) { console.warn('theme:', e); }
 
 /* ============================================================
-   BACKGROUND MUSIC — starts on first click
+   MUSIC + SOUND MENU
    ============================================================ */
-let music = null;
 try {
-  music = document.getElementById('bgMusic');
-  if (music) {
-    music.volume = 0.35;
+  const music     = document.getElementById('bgMusic');
+  const soundBtn  = document.getElementById('soundBtn');
+  const soundMenu = document.getElementById('soundDropdown');
+
+  if (music && soundBtn && soundMenu) {
+
+    // Default = 0.5 (Medium). Remember last choice.
+    const savedVol = localStorage.getItem('volume');
+    const startVol = savedVol !== null ? parseFloat(savedVol) : 0.5;
+    music.volume = startVol;
+    soundBtn.classList.toggle('muted', startVol === 0);
+
+    function updateActive(vol) {
+      soundMenu.querySelectorAll('button').forEach(btn => {
+        const v = parseFloat(btn.dataset.volume);
+        btn.classList.toggle('active', Math.abs(v - vol) < 0.01);
+      });
+    }
+    updateActive(startVol);
+
+    // Autoplay on first user interaction (browser rule)
     const startMusic = () => {
-      const p = music.play();
-      if (p && p.catch) p.catch(err => console.warn('music:', err));
+      music.play().catch(() => {});
       window.removeEventListener('pointerdown', startMusic);
       window.removeEventListener('keydown', startMusic);
       window.removeEventListener('touchstart', startMusic);
@@ -35,16 +51,34 @@ try {
     window.addEventListener('keydown', startMusic);
     window.addEventListener('touchstart', startMusic);
 
-    const muteBtn = document.getElementById('muteToggle');
-    if (muteBtn) {
-      muteBtn.addEventListener('click', e => {
+    // Toggle dropdown
+    soundBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      soundMenu.classList.toggle('open');
+    });
+
+    // Pick a level
+    soundMenu.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', e => {
         e.stopPropagation();
-        music.muted = !music.muted;
-        muteBtn.classList.toggle('muted', music.muted);
+        const vol = parseFloat(btn.dataset.volume);
+        music.volume = vol;
+        localStorage.setItem('volume', vol);
+        soundBtn.classList.toggle('muted', vol === 0);
+        updateActive(vol);
+        soundMenu.classList.remove('open');
+        music.play().catch(() => {});
       });
-    }
+    });
+
+    // Click outside closes
+    document.addEventListener('click', e => {
+      if (!soundMenu.contains(e.target) && !soundBtn.contains(e.target)) {
+        soundMenu.classList.remove('open');
+      }
+    });
   }
-} catch (e) { console.warn('music setup:', e); }
+} catch (e) { console.warn('sound menu:', e); }
 
 /* ============================================================
    PARALLAX + TILT
@@ -59,7 +93,7 @@ try {
     ty = (e.clientY / innerHeight - 0.5);
   });
 
-  function loopParallax() {
+  (function loopParallax() {
     bx += (tx - bx) * 0.08;
     by += (ty - by) * 0.08;
     if (bgLayer) {
@@ -70,8 +104,7 @@ try {
         `perspective(900px) rotateX(${-by*6}deg) rotateY(${bx*6}deg) translateZ(0)`;
     });
     requestAnimationFrame(loopParallax);
-  }
-  loopParallax();
+  })();
 } catch (e) { console.warn('parallax:', e); }
 
 /* ============================================================
@@ -87,9 +120,11 @@ try {
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
     if (dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
+
     const now = performance.now();
     if (now - lastTrail < 16) return;
     lastTrail = now;
+
     const t = document.createElement('div');
     t.className = 'trail';
     const hue = 185 + Math.random() * 80;
@@ -120,7 +155,7 @@ try {
 } catch (e) { console.warn('cursor:', e); }
 
 /* ============================================================
-   POP SOUND — pitch 0.75 → 1.30
+   POP SFX — pitch 0.75 → 1.30
    ============================================================ */
 const popSfx = new Audio('pop.mp3');
 popSfx.preload = 'auto';
@@ -133,10 +168,10 @@ function playPop() {
       s.preservesPitch = false;
       s.mozPreservesPitch = false;
       s.webkitPreservesPitch = false;
-    } catch(_) {}
-    s.playbackRate = 0.75 + Math.random() * 0.55; // 0.75 → 1.30
-    s.play().catch(err => console.warn('pop:', err));
-  } catch (e) { console.warn('playPop:', e); }
+    } catch (_) {}
+    s.playbackRate = 0.75 + Math.random() * 0.55;
+    s.play().catch(() => {});
+  } catch (e) { console.warn('pop:', e); }
 }
 
 /* ============================================================
@@ -144,6 +179,7 @@ function playPop() {
    ============================================================ */
 try {
   const bubbleEls = document.querySelectorAll('#bubbles span[data-bubble]');
+
   bubbleEls.forEach(b => {
     b.addEventListener('click', e => {
       e.stopPropagation();
@@ -153,11 +189,14 @@ try {
 
   function popBubble(b) {
     if (b.classList.contains('pop')) return;
+
     const rect = b.getBoundingClientRect();
     const cx = rect.left + rect.width  / 2;
     const cy = rect.top  + rect.height / 2;
+
     spawnDroplets(cx, cy, 16);
     playPop();
+
     b.classList.add('pop');
     setTimeout(() => {
       b.classList.remove('pop');

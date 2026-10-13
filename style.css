@@ -516,3 +516,14 @@ html, body {
   body, .theme-toggle { cursor: auto; }
   .bubbles { opacity: .6; }
 }
+/* ============================================================
+   MUTE BUTTON (top right)
+   ============================================================ */
+.mute-toggle {
+  left: auto;
+  right: 22px;
+}
+.mute-toggle .music-on  { opacity: 1; transform: scale(1); }
+.mute-toggle .music-off { opacity: 0; transform: scale(.4); }
+.mute-toggle.muted .music-on  { opacity: 0; transform: scale(.4); }
+.mute-toggle.muted .music-off { opacity: 1; transform: scale(1); }

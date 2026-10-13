@@ -1,102 +1,176 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  height: 100vh;
-  background: #05060a;
-  color: white;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+html, body {
+  height: 100%;
+  background: #0a0a0f;
+  color: #f0f0f5;
+  font-family: system-ui, -apple-system, Arial, sans-serif;
+  overflow-x: hidden;
   cursor: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 30px 15px;
 }
 
+/* Soft white glow background */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 30% 40%, rgba(0,225,255,.2), transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(180,0,255,.2), transparent 50%);
-  animation: pulse 6s infinite alternate;
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    radial-gradient(circle at 70% 70%, rgba(255,255,255,.05), transparent 55%);
+  animation: pulse 8s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
 }
+@keyframes pulse { to { transform: scale(1.15); } }
 
-@keyframes pulse { to { transform: scale(1.2); } }
-
-.center {
+.wrapper {
   position: relative;
-  text-align: center;
   z-index: 2;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
-h1 {
-  font-size: 60px;
-  letter-spacing: 4px;
-  background: linear-gradient(90deg, #00e1ff, #b400ff, #00e1ff);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: shine 4s linear infinite;
+/* Profile */
+.profile { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.35);
+  box-shadow: 0 0 30px rgba(255,255,255,.25), 0 0 60px rgba(255,255,255,.12);
+  margin-bottom: 6px;
+  object-fit: cover;
 }
 
-@keyframes shine { to { background-position: 200%; } }
+.name {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255,255,255,.5), 0 0 45px rgba(255,255,255,.25);
+}
 
-p {
-  opacity: .7;
+.handle {
+  font-size: 14px;
   letter-spacing: 3px;
-  margin: 15px 0 40px;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+}
+
+/* Bio */
+.bio {
+  padding: 22px 26px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.09);
+  backdrop-filter: blur(10px);
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255,255,255,.85);
+  box-shadow: 0 0 40px rgba(255,255,255,.05);
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
 }
 
 .btn {
-  display: inline-block;
-  padding: 15px 32px;
-  margin: 8px;
-  border-radius: 50px;
+  display: block;
+  padding: 15px 26px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 1px;
   text-decoration: none;
-  font-weight: bold;
-  background: linear-gradient(135deg, #00e1ff, #b400ff);
-  color: black;
-  box-shadow: 0 0 30px rgba(0,225,255,.5);
-  transition: transform .2s;
+  transition: transform .15s ease, box-shadow .25s ease, background .25s ease;
+  border: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+  background: rgba(255,255,255,.05);
 }
 
-.btn:hover { transform: scale(1.1); }
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 30px rgba(255,255,255,.35);
+  background: rgba(255,255,255,.12);
+}
 
-.ghost {
+.btn.primary {
+  background: #ffffff;
+  color: #0a0a0f;
+  box-shadow: 0 0 25px rgba(255,255,255,.5);
+}
+.btn.primary:hover {
+  box-shadow: 0 0 45px rgba(255,255,255,.85);
+}
+
+.btn.discord {
+  background: rgba(88, 101, 242, .25);
+  border-color: rgba(88, 101, 242, .6);
+}
+.btn.discord:hover {
+  background: rgba(88, 101, 242, .45);
+  box-shadow: 0 0 30px rgba(88, 101, 242, .6);
+}
+
+.btn.ghost:hover {
   background: rgba(255,255,255,.1);
-  color: white;
-  border: 1px solid rgba(255,255,255,.2);
 }
 
+/* ---------- Cursor (white dot + white fading trail) ---------- */
 .cursor-dot, .cursor-ring {
   position: fixed;
   top: 0; left: 0;
-  border-radius: 50%;
   pointer-events: none;
+  border-radius: 50%;
   transform: translate(-50%, -50%);
   z-index: 9999;
 }
 
 .cursor-dot {
   width: 8px; height: 8px;
-  background: #00e1ff;
-  box-shadow: 0 0 15px #00e1ff;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff, 0 0 24px rgba(255,255,255,.7);
 }
 
 .cursor-ring {
-  width: 40px; height: 40px;
-  border: 2px solid #b400ff;
-  box-shadow: 0 0 15px #b400ff;
+  width: 38px; height: 38px;
+  border: 2px solid rgba(255,255,255,.6);
+  box-shadow: 0 0 15px rgba(255,255,255,.4);
+  transition: width .15s, height .15s, border-color .15s;
 }
 
 .trail {
   position: fixed;
   width: 6px; height: 6px;
   border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255,255,255,.6);
   pointer-events: none;
   transform: translate(-50%, -50%);
-  animation: fade .9s forwards;
+  z-index: 9998;
+  animation: fadeTrail .9s ease-out forwards;
 }
 
-@keyframes fade { to { opacity: 0; transform: translate(-50%,-50%) scale(0); } }
+@keyframes fadeTrail {
+  0%   { opacity: .9; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0;  transform: translate(-50%,-50%) scale(0.2); }
+}
+
+/* Hide cursor stuff on mobile */
+@media (pointer: coarse) {
+  .cursor-dot, .cursor-ring { display: none; }
+  body { cursor: auto; }
+}

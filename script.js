@@ -4,16 +4,41 @@
 const root   = document.documentElement;
 const toggle = document.getElementById('themeToggle');
 
-// Only override default if the user has previously chosen one
 const saved = localStorage.getItem('theme');
 if (saved) root.setAttribute('data-theme', saved);
-else root.setAttribute('data-theme', 'light');   // default = light
+else root.setAttribute('data-theme', 'light');
 
 toggle.addEventListener('click', () => {
   const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   root.setAttribute('data-theme', next);
   localStorage.setItem('theme', next);
 });
+
+/* ============================================================
+   BACKGROUND MUSIC — starts on first click (browser rule)
+   ============================================================ */
+const music = document.getElementById('bgMusic');
+if (music) {
+  music.volume = 0.35;
+
+  const startMusic = () => {
+    music.play().catch(() => {});
+    window.removeEventListener('pointerdown', startMusic);
+    window.removeEventListener('keydown', startMusic);
+  };
+  window.addEventListener('pointerdown', startMusic);
+  window.addEventListener('keydown', startMusic);
+}
+
+/* Mute button */
+const muteBtn = document.getElementById('muteToggle');
+if (muteBtn && music) {
+  muteBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    music.muted = !music.muted;
+    muteBtn.classList.toggle('muted', music.muted);
+  });
+}
 
 /* ============================================================
    PARALLAX + TILT
@@ -99,37 +124,31 @@ function makeTrail(x, y) {
 }
 
 /* ============================================================
+   POP SOUND — custom pop.mp3 with random pitch 0.75 → 1.3
+   ============================================================ */
+const popSfx = new Audio('pop.mp3');
+popSfx.preload = 'auto';
+
+function playPop() {
+  try {
+    // clone so rapid pops can overlap
+    const s = popSfx.cloneNode();
+    s.volume = 0.45 + Math.random() * 0.2;              // slight volume variation
+    s.playbackRate = 0.75 + Math.random() * (1.3 - 0.75); // 0.75 → 1.30
+    // some browsers need the pitch-preservation flag off to honor playbackRate
+    s.preservesPitch = false;
+    s.mozPreservesPitch = false;
+    s.webkitPreservesPitch = false;
+    s.play().catch(() => {});
+  } catch (e) { /* silent fail */ }
+}
+
+/* ============================================================
    POPPABLE BUBBLES
    ============================================================ */
 const bubbleEls = document.querySelectorAll('#bubbles span[data-bubble]');
 
-/* --- pop sound --- */
-let audioCtx = null;
-function playPop() {
-  try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    const t = audioCtx.currentTime;
-
-    // short "pop" — sine sweep + tiny noise burst
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(900 + Math.random() * 400, t);
-    osc.frequency.exponentialRampToValueAtTime(160, t + 0.12);
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(0.25, t + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(t);
-    osc.stop(t + 0.18);
-  } catch (e) { /* silent fail */ }
-}
-
-/* --- click = pop --- */
 bubbleEls.forEach(b => {
-  // hitbox grows on touch too (whole visible bubble clickable)
   b.addEventListener('click', e => {
     e.stopPropagation();
     popBubble(b);
@@ -148,7 +167,6 @@ function popBubble(b) {
 
   b.classList.add('pop');
 
-  // Respawn after pop finishes
   setTimeout(() => {
     b.classList.remove('pop');
     b.style.animation = 'none';
